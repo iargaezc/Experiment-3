@@ -1,0 +1,59 @@
+{{ block title }}Gain final{{ endblock }}
+{{ block content }}
+<p>Vous avez fini l'expérience.</p>
+{{if "just_email" in player.participant.vars and player.participant.vars.just_email}}
+	<p>Le résultat est déjà disponible, nous n'avons pas enregistré votre adresse électronique.</p>
+{{endif}}
+<p>
+{{if n_drawn_periods > 1}}
+Les {{n_drawn_periods}} périodes tirées au sort sont les périodes {{drawn_periods}}. 
+{{elif n_drawn_periods == 1}}
+La période n° {{drawn_periods}} a été tirée au sort. 
+{{endif}}
+{{if n_drawn_periods > 0}}<br>Vous avez enregistré {{if n_drawn_periods > 1}}respectivement {{endif}}{{my_choices}}.{{endif}}
+
+{{if "partner_type" in participant.vars and participant.vars.partner_type > 1}}
+	{{if participant.vars.condition == "OBSERVER"}}
+	L’autre participant était uniquement un observateur dans cette période.
+	{{else}}
+	L’autre participant a décidé 
+	{{if participant.vars.condition == "PENALTY"}}
+	{{if participant.vars.gain_from_partner == 0}}de ne pas{{else}}de{{endif}}
+	pénaliser
+	{{elif participant.vars.condition == "REWARD"}}
+	{{if participant.vars.gain_from_partner == 0}}de ne pas{{else}}de{{endif}}
+	récompenser 
+	{{endif}}
+	dans cette période.
+	{{endif}}
+{{endif}}
+
+Votre gain est {{if n_drawn_periods > 0}}donc{{endif}} égal à {{if n_drawn_periods > 1}}{{my_gains}}={{endif}}{{sumgains}} {{monnai}}{{if sumgains > 1}}s{{endif}}.
+</p>
+
+
+
+<!-- <p>Soit {{ totalpointsineuros }}.</p> -->
+
+{{ if session.config.participation_fee > 0 }}
+<p>Avec le forfait de participation de {{ session.config.participation_fee }}, votre gain final est égal à 
+ <strong>{{ totalpayoff }}</strong>{{if increased_to_minimum_payment}} (paiement minimum garanti){{endif}}.</p>
+{{ endif }}
+{{ if not C.ONLINE }}
+{{ if rounded }}Ce paiement sera arrondi à 50 centimes supérieures; vous recevrez donc <strong>{{ totalpayoff2 }}</strong>.<br> {{ endif }}
+{{ if rounded1 }}Ce paiement sera arrondi à 1 euro supérieur; vous recevrez donc <strong>{{ totalpayoff2 }}</strong>.<br> {{ endif }}
+<br>
+{{ endif }}
+
+{{ if C.ONLINE }}
+Merci pour votre participation. 
+ {{ if participant.label }} 
+	Vous allez maintenant être redirigé vers la page d’enregistrement de vos coordonnées bancaires.
+	{{ next_button }}
+ {{ endif }}
+
+{{ else }}
+ <h6>Merci de votre participation !</h6>
+{{ endif }}
+
+{{ endblock }}

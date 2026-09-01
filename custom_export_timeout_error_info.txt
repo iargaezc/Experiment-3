@@ -1,0 +1,3 @@
+should be treated in in appli's conf of sites-available:
+ProxyTimeout 1800
+(just after ProxyPassReverse)

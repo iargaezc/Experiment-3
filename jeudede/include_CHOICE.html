@@ -1,0 +1,363 @@
+
+<style>
+@media only screen and (min-width: 800px) {
+    table.not-responsive-stack {
+        white-space:nowrap
+    }
+}
+body {
+
+}
+
+#dice {
+    width: 90px;
+    height: 90px;
+    transform-style: preserve-3d;
+    transition: transform 1s linear; /*ease-in*/
+	
+}
+
+#dice:hover {
+  cursor: default;
+}
+
+.sides{
+    background-color: #EFE5DC;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.25);
+	{{if not draw_done}}filter: blur(0.5rem){{endif}}
+}
+
+.dot {
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: black;
+    transform: translate(-50%, -50%);
+}
+
+.side-1 .dot-1 { top: 50%; left: 50%; }
+
+.side-2 .dot-1 { top: 25%; left: 25%; }
+.side-2 .dot-2 { top: 75%; left: 75%; }
+
+.side-3 .dot-1 { top: 25%; left: 25%; }
+.side-3 .dot-2 { top: 75%; left: 75%; }
+.side-3 .dot-3 { top: 50%; left: 50%; }
+
+.side-4 .dot-1 { top: 25%; left: 25%; }
+.side-4 .dot-2 { top: 25%; left: 75%; }
+.side-4 .dot-3 { top: 75%; left: 25%; }
+.side-4 .dot-4 { top: 75%; left: 75%; }
+
+.side-5 .dot-1 { top: 25%; left: 25%; }
+.side-5 .dot-2 { top: 25%; left: 75%; }
+.side-5 .dot-3 { top: 75%; left: 25%; }
+.side-5 .dot-4 { top: 75%; left: 75%; }
+.side-5 .dot-5 { top: 50%; left: 50%; }
+
+.side-6 .dot-1 { top: 25%; left: 25%; }
+.side-6 .dot-2 { top: 25%; left: 75%; }
+.side-6 .dot-3 { top: 75%; left: 25%; }
+.side-6 .dot-4 { top: 75%; left: 75%; }
+.side-6 .dot-5 { top: 50%; left: 25%; }
+.side-6 .dot-6 { top: 50%; left: 75%; }
+
+#dice .side-1 {
+  transform: translateZ(45px);
+}
+#dice .side-2 {
+  transform: rotateX(-180deg) translateZ(45px);
+}
+#dice .side-3 {
+  transform: rotateY(90deg) translateZ(45px);
+}
+#dice .side-4 {
+  transform: rotateY(-90deg) translateZ(45px);
+}
+#dice .side-5 {
+  transform: rotateX(90deg) translateZ(45px);
+}
+#dice .side-6 {
+  transform: rotateX(-90deg) translateZ(45px);
+}
+
+#dice[data-side="1"] {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(720deg);
+}
+#dice[data-side="2"] {
+    transform: rotateX(360deg) rotateY(540deg) rotateZ(720deg);
+}
+#dice[data-side="3"] {
+    transform: rotateX(360deg) rotateY(630deg) rotateZ(720deg);
+}
+#dice[data-side="4"] {
+    transform: rotateX(360deg) rotateY(450deg) rotateZ(720deg);
+}
+#dice[data-side="5"] {
+    transform: rotateX(630deg) rotateY(360deg) rotateZ(720deg);
+}
+#dice[data-side="6"] {
+    transform: rotateX(450deg) rotateY(360deg) rotateZ(720deg);
+}
+
+#dice[data-side="1"].reRoll {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+}
+#dice[data-side="2"].reRoll {
+    transform: rotateX(0deg) rotateY(180deg) rotateZ(0deg);
+}
+#dice[data-side="3"].reRoll {
+    transform: rotateX(0deg) rotateY(270deg) rotateZ(0deg);
+}
+#dice[data-side="4"].reRoll {
+    transform: rotateX(0deg) rotateY(90deg) rotateZ(0deg);
+}
+#dice[data-side="5"].reRoll {
+    transform: rotateX(270deg) rotateY(0deg) rotateZ(0deg);
+}
+#dice[data-side="6"].reRoll {
+    transform: rotateX(90deg) rotateY(0deg) rotateZ(0deg);
+}
+
+#dice[data-side="1"].reRoll2 {
+    transform: rotateX(180deg) rotateY(180deg) rotateZ(0deg);
+}
+#dice[data-side="2"].reRoll2 {
+    transform: rotateX(180deg) rotateY(0deg) rotateZ(0deg);
+}
+#dice[data-side="3"].reRoll2 {
+    transform: rotateX(180deg) rotateY(90deg) rotateZ(0deg);
+}
+#dice[data-side="4"].reRoll2 {
+    transform: rotateX(180deg) rotateY(270deg) rotateZ(0deg);
+}
+#dice[data-side="5"].reRoll2 {
+    transform: rotateX(270deg) rotateY(90deg) rotateZ(0deg);
+}
+#dice[data-side="6"].reRoll2 {
+    transform: rotateX(90deg) rotateY(90deg) rotateZ(0deg);
+}
+
+#diceResult{
+	width:220px;
+	background-color: #4EA4EE;
+	
+	text-align:center;
+	color: white;
+	padding: 0.5rem 0.1rem;
+	border-radius: 0.25rem;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+	cursor:pointer;
+	{{if draw_done}}visibility:hidden;{{endif}}
+}
+
+#diceResult.hide{
+	opacity: 0;
+}
+
+#diceResult.reveal{
+	animation: fadeUp 0.3s forwards;
+}
+
+.others_choice {
+ font-weight:bold;
+ font-size:2.5em;
+ position:relative;
+ top:0.2em;
+}
+
+li {
+	font-weight:bold;
+}
+
+{{if player.type > 0}}
+.mylevel {
+ color:{{player.color_my_level}}
+}
+.otherlevel {
+ color:{{player.color_other_level}}
+}
+.partnerlevel {
+ color:{{player.color_partner_level}}
+}
+{{endif}}
+{{if player.treatment == 2 or player.type == 4}}
+	.penalty{
+		display:none;
+	};
+{{endif}}
+{{if player.treatment == 1 or player.type == 3}}
+	.reward{
+		display:none;
+	};
+{{endif}}
+</style>
+
+<div id="initial_presentation_1">
+	<h6>Jeu de dé, période {{player.round_number}}	</h6>
+
+	{{if session.config.test_mode}}<code style='letter-spacing: -1px;'></code><br>{{endif}}
+
+	<div class="position-relative top-0 start-0">
+		<br><a class="position-absolute start-0 btn btn-light rappeltoggle text-nowrap" id=rappeltoggle1 data-toggle="collapse" href="#rappelInstructions" role="button" aria-expanded="true" aria-controls="rappelInstructions">
+			Revoir les instructions
+		</a>
+	</div>
+	<div class="collapse text-start" id="rappelInstructions">
+		<br>
+		<div class="card bg-light m-3" >
+			<div class="card-body ">
+				{{ include 'jeudede/include_INTRO.html' }}
+			</div>
+			<a class="btn btn-secondary rappeltoggle" id=rappeltoggle2 data-toggle="collapse" role="button" aria-expanded="true" aria-controls="rappelInstructions">
+				Cachez les instructions
+			</a>
+		</div>
+	</div><br><br>
+	{{if player.type > 1}}
+	<table class="table table-borderless table-responsive-stack"><tr><td>
+		{{if format_social_info == 1}}
+			<p>Voici quelques données sur <strong>votre</strong> département&nbsp;: </p>
+			<ul>
+			<li>Revenu moyen : <span class='mylevel'>{{revenu_me}}</span></li>
+			</ul>
+			<p>Voici quelques données sur le département de <strong>l’autre participant</strong>&nbsp;:</p>
+			<ul>
+			<li>Revenu moyen : <span class='partnerlevel'>{{revenu_partner}}</span> </li>
+			</ul>
+			<p><strong>Moyenne nationale :</strong></p>
+			<p>Revenu : {{average_country_income}}</p>
+		{{else}}
+			<p class="mylevel"><b>Vous</b> habitez dans un département à <b>revenu</b> moyen mensuel <b>{{revenu_me}}</b>.</p>
+			<p class='partnerlevel'><b>L’autre participant</b> habite dans un département à <b>revenu</b> moyen mensuel <b>{{revenu_partner}}</b>.</p>
+			<p>Pour information, le revenu mensuel moyen en France est de <span>{{average_country_income}}</span>.</p>
+		{{endif}}
+	</td></tr></table>	
+	{{endif}}
+	<br>
+	{{if player.type <= 1}}
+		<h6>Veuillez lancer le dé et enregistrer le résultat&nbsp;: </h6>
+	{{else}}
+		<h6>Le résultat du tirage de l'autre participant&nbsp;: </h6>
+	{{endif}}
+	<br>
+	<div style="margin-left:65px">
+		<div id="dice" data-side="{{draw_result}}">
+			<div class="sides side-1">
+					<span class="dot dot-1"></span>
+			</div>
+			<div class="sides side-2">
+					<span class="dot dot-1"></span>
+					<span class="dot dot-2"></span>
+			</div>
+			<div class="sides side-3">
+					<span class="dot dot-1"></span>
+					<span class="dot dot-2"></span>  
+					<span class="dot dot-3"></span>
+			</div>
+			<div class="sides side-4">
+					<span class="dot dot-1"></span>
+					<span class="dot dot-2"></span>  
+					<span class="dot dot-3"></span>
+					<span class="dot dot-4"></span>
+			</div>
+			<div class="sides side-5">
+					<span class="dot dot-1"></span>
+					<span class="dot dot-2"></span>  
+					<span class="dot dot-3"></span>
+					<span class="dot dot-4"></span>
+					<span class="dot dot-5"></span>
+			</div>
+			<div class="sides side-6">
+					<span class="dot dot-1"></span>
+					<span class="dot dot-2"></span>  
+					<span class="dot dot-3"></span>
+					<span class="dot dot-4"></span>
+					<span class="dot dot-5"></span>
+					<span class="dot dot-6"></span>
+			</div>
+		</div>
+	</div>
+<button type="button" onclick="rollDice()" id="diceResult" style="position:relative;top:-60px;border:none">Clickez ici pour lancer le dé</button>
+{{if player.type > 1}}
+<h6>Le résultat enregistré par l’autre participant est&nbsp;: <span class="others_choice">{{others_choice}}</span>.</h6>
+{{endif}}
+</div>
+<input type="hidden" name="n_instr_clicks" id="n_instr_clicks" value="0">
+<script>
+$(document).ready(function() {
+	$(".otree-title").hide();
+	{{if not draw_done}}setTimeout(function(){$("#field_choice").hide();$(".otree-btn-next").hide()},100);{{endif}}
+	{{if player.type > 1 }}
+		{{if draw_result == 0 or others_choice == 0}}
+			$("._otree-content").html("<h1>L'expérience n'est pas encore prête ou une erreur s'est produite.<br>Veuillez reessayer plus tard.</h1>")
+		{{endif}}
+
+	{{endif}}
+	$(".rappeltoggle").click(function() {toggleinstructions($(".collapse").is(":visible"));});
+});
+
+let dice = document.getElementById('dice');
+var outputDiv = document.getElementById('diceResult');
+var result = {{draw_result}};
+let draw_done={{if draw_done}}true{{else}}false{{endif}};
+
+function customLiveRecv(data) {
+	result = Number(data);
+	draw_done=true;
+	console.log("received result:",result);
+}
+function rollDice(dres) {
+	if(dres===undefined) dres=0;
+	liveSend("custom|get_dice_draw");
+	// console.log("dres =",dres)
+
+    // let result = Math.floor(Math.random() * 6) + 1;
+    dice.dataset.side = (dres == 0)?Math.floor(Math.random() * 6) + 1:result;
+    dice.classList.toggle("reRoll");
+	$(".sides").css("filter", "blur(0)");
+    console.log("result =",result);
+	
+    outputDiv.classList.remove("reveal");
+    outputDiv.classList.add("hide");
+		outputDiv.innerHTML = "Résultat : " + result;
+		setTimeout(function(){
+			if(dres==0) {
+				let newres=draw_done?result:0;
+				console.log("rolling dice again with newres =",newres);
+				if(newres>0) {
+				$("#dice").css({"transition":"transform 1s ease-out"})
+				}
+				rollDice(newres);
+			}
+			else {
+				// outputDiv.classList.add("reveal"); 
+				outputDiv.style.top="0px";
+				outputDiv.style.visibility="hidden";
+				$("#field_choice").show();
+				$(".otree-btn-next").show();
+			}
+		}, 1000);
+}
+
+function toggleinstructions(open)
+{
+	shdelay=300;
+	if(open) {
+		$(".collapse").hide(shdelay, function() {$(window).scrollTop(0);});
+		$(".rappeltoggle").text("Revoir les instructions");	
+	}
+	else{
+		$(".collapse").show(shdelay);
+		$(".rappeltoggle").text("Cachez les instructions");
+		$("#n_instr_clicks").val(parseInt($("#n_instr_clicks").val())+1);
+	}
+}
+
+</script>

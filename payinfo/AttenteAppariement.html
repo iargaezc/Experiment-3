@@ -1,0 +1,141 @@
+{{ block title }}Fin de la première partie{{ endblock }}
+{{ block content }}
+
+<p>Nous attendons le choix des autres participants afin de pouvoir calculer votre gain. Vous pouvez vous reconnecter à partir du {{session.config.date_limite}} à {{session.config.date_limite_time}}.</p>
+<p>Le résultat peut être disponible avant le {{session.config.date_limite}}. Un message peut alors vous être envoyé si vous enregistrez votre adresse électronique ci-dessous. Notez que cette adresse ne sera pas divulguée aux chercheurs et sera supprimée de la base de données une fois le message est envoyé ou à défaut dès que vous vous connectez pour afficher le résultat et remplir les coordonnées bancaires.</p>
+{{if 'email' in participant.vars and participant.vars.email}}
+<div id="alert_email_info" class="alert alert-info">
+	<p>Si le résultat est disponible avant le {{session.config.date_limite}}, un message vous sera envoyée à l'adresse <em><strong id=email_info>{{participant.vars.email}}</strong></em>.</p>
+	<p>Vous pouvez maintenant fermer cet onglet.</p>
+</div>
+{{else}}
+<div id="alert_form">
+<div class="form-control ml-2 needs-validation" novalidate>
+
+		  <input type="email" name="email" placeholder="Votre adresse du courriel" class="email form-control alert_form" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" value="{{if 'email' in participant.vars}}{{participant.vars.email}}{{endif}}" required>
+          <div class="valid-feedback feedback-pos">
+            courriel correct
+          </div>
+          <div class="invalid-feedback feedback-pos">
+            Adresse du courriel erronée
+          </div>
+          <button id="alert_sumbit" type="submit" class="btn btn-warning mt-2" value="validate">
+			{{if 'email' in participant.vars and participant.vars.email}}
+			Modifier
+			{{else}}
+			Enregistrer
+			{{endif}}
+		</button>
+ </div>
+ </div>
+ <div id="alert_email_info" style="display:none" class="alert alert-info">
+	<p>Si le résultat est disponible avant le {{session.config.date_limite}}, un message vous sera envoyée à l'adresse <em><strong id=email_info></strong></em>.</p>
+	<p>Vous pouvez maintenant fermer cet onglet.</p>
+ </div>
+{{endif}}
+
+<br>
+
+<script>
+var alert_submitted=false;
+var alert_button_clicked=false;
+var alert_timeout;
+
+function free_otree_btn() {
+	if($('.otree-btn-next').hasClass("disabled")) {
+		//$(".otree-btn-next").attr("disabled",false);
+		$('.otree-btn-next').removeClass("disabled").attr("data-bs-toggle", null);
+		$('.otree-btn-next').tooltip('disable');
+	}
+}
+
+$(document).ready(function() {
+$("#id_no_alert_info").on("change",function() {
+	console.log(this.checked);
+	if(this.checked) {
+		$(".alert_form").attr("required",false);
+		$("#alert_form").hide();
+		// if(!alert_submitted) $(".otree-btn-next").attr("disabled",false);
+		if(!alert_submitted) free_otree_btn();
+		
+	}
+	else {
+		$(".alert_form").attr("required",true);
+		$("#alert_form").show();
+		//if(!alert_submitted) $(".otree-btn-next").attr("disabled",true);
+		if(!alert_submitted) {
+			//$(".otree-btn-next").attr("disabled",true);
+			$('.otree-btn-next').attr('data-bs-toggle',"tooltip");
+			$('.otree-btn-next').addClass('disabled');
+			$('.otree-btn-next').tooltip('enable');
+		}
+	}
+
+});
+
+	$('.otree-btn-next').attr('data-bs-toggle',"tooltip");
+	$('.otree-btn-next').attr('data-bs-title',"Veuillez enregistrer vos coordonnées pour recevoir une alerte si le résultat est disponible avant le {{session.config.date_limite}}.");
+setTimeout(function(){
+	// $("#num_per").html("{{player.round_number}}");
+	//$(".otree-btn-next").attr("disabled",true);
+	$('.otree-btn-next').addClass('disabled');
+	$('.otree-btn-next').css('pointer-events','auto');
+
+  },50);
+  
+	$(function () {
+	$('[data-bs-toggle="tooltip"]').tooltip();
+	
+	});
+	$(".otree-btn-next").click(function(e,a_sup_param){
+		alert_button_clicked=false;
+		// console.log(document.getElementById("id_no_alert_info").checked);
+		if(!alert_submitted) e.preventDefault();
+	});
+
+	$("#alert_sumbit").click(function(e,a_sup_param){
+		// console.log(document.getElementById("id_no_alert_info").checked);
+		alert_button_clicked=true;
+		if(alert_submitted) e.preventDefault();
+	});
+	
+	$(".otree-form").on("submit",function(e) {
+		if(!alert_submitted) {
+			e.preventDefault();
+			setTimeout(function() {
+				$(".otree-btn-next").attr("disabled",false);
+			},500);
+			if(alert_button_clicked) {
+				liveSend({"email":$("#email").val()});
+				$("#alert_sumbit").attr("disabled",true);
+				$('.alert_form').attr("disabled",true);
+				alert_timeout=setTimeout(function(){
+					$("#alert_sumbit").attr("disabled",false);
+					$('.alert_form').attr("disabled",false);
+				},3000);
+			}
+			alert_button_clicked=false;
+		}
+		
+	});
+
+});
+
+function liveRecv(data) {
+	// console.log('data', data);
+	if (data.finished) {
+		clearInterval(alert_timeout);
+		alert_submitted=true;
+		$('#alert_form').hide()
+		if(!data.result_available) $('#alert_email_info').show();
+		$('#email_info').html(data.email);
+		$('.form-check').hide();
+		free_otree_btn();
+		
+	}
+	if(data.result_available) {
+		window.location.reload();
+	}
+}
+</script>
+{{ endblock }}

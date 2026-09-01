@@ -1,0 +1,24 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+	<p id=lastinfo> 
+	{{ redirect_phrase }}
+	</p> 
+
+
+	<script>
+	let redirect_page='{{redirect_page}}';
+	$(document).ready(function(){
+	
+		if(redirect_page!='') $(window).attr('location',redirect_page.replace(/&amp;/gi,'&'));
+		else $('#lastinfo').text("L'expérience est à présent terminée. Merci de votre participation");
+	});
+</script>
+
+{% endblock %}
+

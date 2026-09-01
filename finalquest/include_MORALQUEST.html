@@ -1,0 +1,58 @@
+<style>
+.catname{
+	display:none;
+}
+.form-select{
+	/*background-color:blue;*/
+}
+@media only screen and (min-width: 601px) {
+	.form-select{
+		/*background-color:yellow;*/
+		max-width:75px;
+	}
+}
+@media only screen and (max-width: 600px) {
+	.catname{
+		display:block;
+		font-weight:bold;
+	}
+	.headerline {
+		display:none;
+		visibility:hidden;
+		height:1px;
+	}
+}
+
+</style>
+<div id="initial_presentation_1" class="">
+
+	<table class="table table-responsive-stack">
+	<tr class="headerline text-center align-middle">
+	<th></th>
+	{{for cat in C.MORALQUEST_CATSFR}}
+	<th >{{cat}}</th>
+	{{endfor}}
+	</tr>
+	{{for q in qlist}}
+	<tr>
+	<th>{{q.q}}</th>
+	{{for cat in cats}}
+		<td id='for_Q{{q.n}}_{{cat.cat}}'><div class="catname">{{cat.fr}} :</div></td>
+	{{endfor}}
+	</tr>
+	{{endfor}}
+	</table>
+
+</div>
+<script>
+$(document).ready(function(){
+	{{for q in qlist}}
+	{{for cat in C.MORALQUEST_CATS}}
+		$('#id_Q{{q.n}}_{{cat}}').appendTo('#for_Q{{q.n}}_{{cat}}');
+		//$('#id_Q{{q.n}}_{{cat}}').css('width','75px');
+		setTimeout(function() {$('#field_Q{{q.n}}_{{cat}}').hide();},50);
+	{{endfor}}
+	{{endfor}}
+
+});
+</script>

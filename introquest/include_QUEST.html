@@ -1,0 +1,40 @@
+
+<script>
+$(document).ready(function() {
+$( '<div class="alert-warning" style="display:none" id="wrong_postal_code">Le format du code postal est erroné.</div>' ).insertBefore($('#field_postal_code_number_placeholder'));
+additional_validate=function(varname){
+	// console.log("additional_validate");
+	if(varname == "postal_code" && !artificial) {
+		var r = /^\d{5}$/;
+		// console.log(document.forms[0][varname].value.match(r),document.forms[0][varname].value.match(r))
+		if(!document.forms[0][varname].value.match(r)) {
+			return false;
+		} 
+	}
+
+	return true;
+};
+additional_onchange=function(varname){
+	if(varname=="postal_code" && additional_validate(varname)) {
+		$("#wrong_"+varname).hide();
+		console.log(varname,"OK");
+	}
+}
+
+additional_validate_invalid_action=function(varnames) {
+	for(var i=0; i<varnames.length; i++) {
+		if(varnames[i]=="postal_code") {
+			$("#wrong_"+varnames[i]).show();
+			$([document.documentElement, document.body]).animate({
+				scrollTop: $("#field_"+varnames[i]).offset().top,
+			}, 10);
+		}
+		else {
+			$('label[for="id_'+varnames[i]+'"]').css({'color':'red'});
+			// console.log(i,$('label[for="id_'+varnames[i]+'"]'));
+		}
+	}
+
+}
+});
+</script>

@@ -1,0 +1,46 @@
+<div id="initial_presentation_1" class="h5">
+	Finalement, vous devez sélectionner la paire de cercles qui décrit le mieux votre degré de proximité avec les participants qui habitent des départements qui ont les mêmes caractéristiques économiques que le vôtre  :
+
+</div>
+
+<div id="initial_presentation_2" class="h5">
+	Finalement, vous devez sélectionner la paire de cercles qui décrit le mieux votre degré de proximité avec  les participants qui habitent des départements qui ont des caractéristiques économiques <u>différentes</u> du vôtre :
+
+</div>
+
+<style>
+
+@media only screen and (max-width: 600px) {
+.field_container {
+	/*centering with auto margins*/
+	margin-left:auto;
+	margin-right:auto;
+	/*setting width as the alargest image so that auto margins indeed center the element*/
+	width:250px;
+
+}
+}
+
+
+
+</style>
+
+<script>
+$(document).ready(function() {
+setTimeout(function(){
+	// console.log($("img"));
+	$("img").each(function() {
+		// console.log(this);
+		$( this ).attr("src", "{{static 'images/replace.png'}}".replace(/replace/,$( this ).attr("id")));
+		$( this ).css({'position':'relative','top':'-50px'});
+	});
+	/*$("div.form-check-inline").each(function(index) {
+		var $td = $("<td>", {id: "td_"+index});
+		$("tr").append($td);
+		$("#td_"+index).append(this);
+	
+	});*/
+  },50);
+});
+
+</script>

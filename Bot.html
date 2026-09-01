@@ -1,0 +1,7 @@
+<script>var artificial=false;</script>
+{{ if participant.label and participant.label in session.config.bot_labels }}
+ <script>artificial=true;</script>
+ <script src="{{ static 'bot.js' }}"></script>
+ {{ else }}
+
+{{ endif }}

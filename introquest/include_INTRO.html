@@ -1,0 +1,13 @@
+<div id="initial_presentation_1" class="">
+
+<p>Nous vous remercions pour votre participation &agrave; cette exp&eacute;rience.</p>
+<p>L&rsquo;exp&eacute;rience se d&eacute;roule en trois parties et dure environ 30 minutes :</p>
+<ol><li>Un premier questionnaire.</li><li>{{num_periods}} p&eacute;riodes d&rsquo;un jeu de tirage de d&eacute;.</li><li>Un questionnaire final.&nbsp;</li></ol>
+<p>Pour la partie jeu, vous jouerez {{num_periods}} périodes apparié(e) avec d'autres participants.</p>
+<p>Votre gain final sera la somme d'un gain fixe de {{session.config.participation_fee}} et d'un gain variable d&eacute;pendant de vos r&eacute;sultats dans la partie <em>jeu de dé</em>.
+<br>Veuillez noter {{if n_drawn_periods > 1}}que {{ns_drawn_periods}} p&eacute;riodes{{else}} qu'{{ns_drawn_periods}} période{{endif}} parmi les {{num_periods}} p&eacute;riodes {{if n_drawn_periods > 1}}seront choisies{{else}}sera choisie{{endif}} al&eacute;atoirement pour paiement.</p>
+<p>Le responsable de l&rsquo;exp&eacute;rience est Irving Argaez, doctorant au CES (irving.argaez@univ-paris1.fr)&nbsp;</p>
+<p>Toutes les donn&eacute;es sont anonymes.</p>
+
+</div>
+<input type="hidden" name="init_link" value="{{view.request.url_for('Login')}}/..{% url "InitializeParticipant" participant.code %}"/>

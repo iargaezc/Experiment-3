@@ -1,0 +1,226 @@
+{{ block title }}{{ endblock }}
+{{ block content }}
+
+{{if session_finished}}
+<h4>Cette expérience est terminée, les nouveaux participants ne sont plus acceptés.</h4>
+{{else}}
+<style>
+    .stats {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .stats th, .stats td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .stats th {
+        background-color: #f2f2f2;
+    }
+    .stats-title {
+        font-weight: bold;
+    }
+    .stats-value {
+        vertical-align: top;
+    }
+</style>
+
+<table class="stats">
+    <tr>
+        <th class="stats-title">Treatment</th>
+        <th class="stats-title">Combination</th>
+        <th class="stats-title">N started</th>
+        <th class="stats-title">N finished</th>
+        <th class="stats-title">N finished by level</th>
+    </tr>
+    {{for tr in data}}
+    {{for comb in tr.combdata}}
+    <tr>
+        {{if comb.tr_line == 1}}
+        <td rowspan={{tr.ncombs}} class="stats-value">{{ tr.treatment }}</td>
+        {{endif}}
+        
+        <td class="stats-value">{{ if tr.treatment > 0 }}{{ comb.combination }}: {{comb.combination_info}}{{endif}}</td>
+        <td class="stats-value">
+            {{ if tr.treatment == 0 }}
+                {{comb.n_p0_started}}
+            {{else}}
+                P1: {{comb.n_p1_started}}<br>
+                P2: {{comb.n_p2_started}}<br>
+            {{endif}}
+        </td>
+        <td class="stats-value">
+            {{ if tr.treatment == 0 }}
+                {{comb.n_p0_finished}}
+            {{else}}
+                P1: {{comb.n_p1_finished}}<br>
+                P2: {{comb.n_p2_finished}}<br>
+            {{endif}}
+        </td>
+        <td class="stats-value">
+            {{ if tr.treatment > 0 }}
+                {{for c,v in comb.combs}}
+                    L{{c}} ({{v}}):
+                    {{if c == 1}}
+                        {{comb.n_level1_finished}}
+                    {{else}}
+                        {{comb.n_level2_finished}}
+                    {{endif}}
+                    <br>
+                {{endfor}}
+            {{endif}}
+        </td>
+        
+    </tr>
+    {{endfor}}
+    {{endfor}}
+</table>
+<input type="checkbox" id="auto_refresh"><label for="auto_refresh">Auto-refresh</label>
+<button type="button" class="btn btn-info" id="manual_refresh">Refresh</button>
+<hr>
+
+<h3>Last {{take_participants}} participants : </h3>
+{{for p in participants}}
+    <div class="alert alert-{{if p.type == 0}}warning{{elif p.type == 1}}info{{elif p.type in [2,3,4]}}success{{else}}danger{{endif}}">
+        <strong>P{{p.id_in_session}}</strong>{{if p.label}} (label={{p.label}}) {{endif}} - 
+       <b> P{{p.type}}</b>{{if p.type > 0}}, 
+            <b>{{p.vars.sess_prefix}}</b> ({{p.vars.combination_info}}), level <em>{{p.vars.level_info}}</em>,
+        {{endif}}
+        c.p.: <em>{{p.vars.postal_code}}</em>
+        ({{p.vars.datetime_started}})
+    </div>
+{{endfor}}
+<hr>Show email for participant <input type="text" id="participant_code" placeholder="Enter participant code">
+<button type="button" type="button" class="btn btn-secondary" id="show_email">Show Email</button>
+<div class="alert alert-danger" id="alert_email_info" style="display: none;"></div>
+<div class="form-control ml-2 needs-validation" id="email_form" style="display: none;" novalidate>
+
+    <input type="email" name="email" placeholder="Votre adresse du courriel" class="email form-control alert_form" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" value="" required>
+    <div class="valid-feedback feedback-pos">
+      courriel correct
+    </div>
+    <div class="invalid-feedback feedback-pos">
+      Adresse du courriel erronée
+    </div>
+    <button id="alert_submit" type="submit" class="btn btn-warning mt-2" value="validate">
+        Enregistrer/Modifier
+    </button>
+</div>
+<script>
+    $(document).ready(function() {
+        const MAX_AUTO_REFRESHES = 720;
+        
+        // Check URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let counter = parseInt(urlParams.get('refresh_count')) || 0;
+        
+        // Check if counter has reached the limit
+        if (counter >= MAX_AUTO_REFRESHES) {
+            // Uncheck the checkbox and reset counter
+            $('#auto_refresh').prop('checked', false);
+            updateURL(false, 0);
+        } else if (urlParams.get('auto_refresh') === 'true') {
+            $('#auto_refresh').prop('checked', true);
+        }
+
+        function updateURL(autoRefresh, refreshCount) {
+            const url = new URL(window.location);
+            if (autoRefresh) {
+                url.searchParams.set('auto_refresh', 'true');
+                url.searchParams.set('refresh_count', refreshCount.toString());
+            } else {
+                url.searchParams.delete('auto_refresh');
+                url.searchParams.delete('refresh_count');
+            }
+            window.history.replaceState({}, '', url);
+        }
+
+        // Handle checkbox change event
+        $('#auto_refresh').change(function() {
+            if (this.checked) {
+                updateURL(true, 0); // Reset counter when manually checked
+            } else {
+                updateURL(false, 0); // Reset counter when manually unchecked
+            }
+        });
+
+        // Manual refresh button
+        $('#manual_refresh').click(function() {
+            // Keep auto_refresh parameter but reset counter
+            const isAutoRefreshOn = $('#auto_refresh').is(':checked');
+            if (isAutoRefreshOn) {
+                updateURL(true, 0); // Reset counter but keep auto_refresh
+            }
+            window.location.reload();
+        });
+
+        // Auto-refresh functionality
+        setTimeout(function(){
+            if ($('#auto_refresh').is(':checked')) {
+                // Increment counter for next reload
+                const newCounter = counter + 1;
+                updateURL(true, newCounter);
+                window.location.reload();
+            }
+        }, 10000);
+
+        // Show and modify email for participant
+        $('#show_email').click(function() {
+            const participantCode = $('#participant_code').val().trim();
+            if (participantCode) {
+                liveSend({"type":"get_email","participant_code": participantCode});
+            } else {
+                email_alert('Please enter a participant code.');
+            }
+        });
+        $("#alert_submit").click(function() {
+
+        });
+        $(".otree-form").on("submit",function(e) {
+			e.preventDefault();
+            const email = $('#email').val().trim();
+            if (email) {
+                liveSend({"type":"set_email","email": email, "participant_code": $('#participant_code').val().trim()});
+                $('#email_form').hide();
+            } else {
+                email_alert('Please enter a valid email address.');
+            }
+		
+	    });
+
+    });
+    function liveRecv(data) {
+        if("type" in data && data.type === "email") {
+            let alert_success = false
+            if ("email" in data && data.email) {
+                $('#email').val(data.email);
+                if("success" in data) alert_success = data.success;
+            }
+            if("message" in data) {
+                email_alert(data.message, alert_success);
+            }
+            if("hide_form" in data && data.hide_form) {
+                $('#email_form').hide();
+            }
+            else $('#email_form').show();
+        }
+    }
+    function email_alert(message,success) {
+        if(typeof success === 'undefined') {
+            success = false;
+        }
+        if(success) {
+            $('#alert_email_info').removeClass('alert-danger').addClass('alert-success');
+        } else {
+            $('#alert_email_info').removeClass('alert-success').addClass('alert-danger');
+        }
+        $('#alert_email_info').html(message);
+        $('#alert_email_info').show();
+        setTimeout(function() {
+            $('#alert_email_info').hide(1000);
+        }, 5000);
+    }
+</script>
+{{endif}}
+{{endblock}}

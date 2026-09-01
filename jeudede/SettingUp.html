@@ -1,0 +1,14 @@
+{{ block title }}
+{{ endblock }}
+{{ block content }}
+
+<p>Veuillez patienter...</p>
+
+{{ next_button }}
+<script>
+$(document).ready(function(){
+$('.otree-btn-next').click();
+$('.otree-btn-next').hide();
+});
+</script>
+{{ endblock }}

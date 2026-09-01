@@ -1,0 +1,112 @@
+<div id="{{ initial_presentation }}_1" class="text-justify">
+	<p>Vous allez maintenant commencer la partie « jeu de dé ».</p>
+	<!-- <p>&nbsp;</p> -->
+	{{if player.type < 2}}
+		<p>Dans cette partie, vous {{if player.treatment > 0}}serez apparié à un autre participant pendant un total de <b>{{C.NUM_ROUNDS}} p&eacute;riodes</b>. L'autre participant sera différent à chaque période.
+		{{else}}devez effectuer un tirage d&rsquo;un d&eacute; virtuel et enregistrer le r&eacute;sultat pour chaque tirage pendant <b>{{C.NUM_ROUNDS}} p&eacute;riodes</b>.{{endif}} 
+		{{if player.treatment > 0}}À chaque période, vous effectuerez un tirage de dé.{{endif}} 
+		Le r&eacute;sultat de chaque tirage correspondra &agrave; un gain en euros, sauf pour un tirage de 6, qui donne un gain de 0 &euro;.</p>
+		<p>Concr&egrave;tement, un tirage de 1 entra&icirc;ne un gain de 1 &euro; ; un tirage de 2, un gain de 2 &euro; ; un tirage de 3, un gain de 3 &euro; ; un tirage de 4, un gain de 4 &euro; ; un tirage de 5, un gain de 5 &euro; ; et un tirage de 6 ne rapporte aucun gain.</p>
+		<p>Seul <b>{{ns_drawn_periods}} tirage{{if n_drawn_periods > 1}}s seront{{else}} sera{{endif}} s&eacute;lectionn&eacute;{{if n_drawn_periods > 1}}s{{endif}} al&eacute;atoirement &agrave; la fin de l&rsquo;exp&eacute;rience</b> pour déterminer votre paiement final.</p>
+		{{if player.treatment == 0}}
+			<p>Veuillez noter que votre gain d&eacute;pend uniquement du r&eacute;sultat que vous enregistrez.&nbsp;</p>
+			<p>Les r&eacute;sultats r&eacute;els des tirages seront effac&eacute;s. L&rsquo;exp&eacute;rimentateur n&rsquo;aura pas acc&egrave;s &agrave; cette donn&eacute;e et ne saura pas quel &eacute;tait le r&eacute;sultat r&eacute;el du tirage. Seuls vous en avez connaissance.</p>
+			<p>Notez que le résultat de l'expérience sera disponible aujourd'hui immédiatement à la fin de celle-ci. La page finale vous permettra d'enregistrer vos coordonnées bancaires afin de recevoir le paiement correspondant à votre gain.</p>
+		{{else}}
+			<p>Veuillez noter que le résultat de l'expérience ne sera pas disponible immédiatement en raison des appariements nécessaires pour la conclusion de cette expérience. 
+				Vous devrez obligatoirement vous reconnecter le {{session.config.date_limite}} entre {{session.config.date_limite_time}} et {{session.config.date_limite_time_end}} (ou plus tôt si le résultat est disponible et vous choisissez de recevoir une alerte) afin de prendre connaissance de votre gain final et enregistrer vos coordonnées bancaires pour que le paiement soit effectué.
+				Le lien pour vous reconnecter sera le même.
+			</p>
+
+		{{endif}}
+	{{else}}
+		<p>Dans cette partie, vous serez appari&eacute; à <b>un nouveau participant à chaque période</b>, pendant {{C.NUM_ROUNDS}} p&eacute;riodes. Ce dernier a effectu&eacute; un tirage d&rsquo;un d&eacute; virtuel et a enregistr&eacute; le r&eacute;sultat.</p>
+		<p>Le r&eacute;sultat de chaque tirage repr&eacute;sente un gain &eacute;quivalent en euros, &agrave; l'exception d&rsquo;un tirage de 6 qui donne un gain de 0&euro;.&nbsp;</p>
+		<p>Concr&egrave;tement, un tirage de 1 vous rapportera 1 &euro; ; un tirage de 2, 2 &euro; ; un tirage de 3, 3 &euro;, et ainsi de suite, jusqu'au tirage de 5, qui vous rapportera 5 &euro;. Un tirage de 6 ne vous rapportera rien. &Agrave; la fin de l'exp&eacute;rience, {{ns_drawn_periods}} tirage{{if n_drawn_periods > 1}}s seront{{else}} sera{{endif}} s&eacute;lectionn&eacute;{{if n_drawn_periods > 1}}s{{endif}} al&eacute;atoirement pour d&eacute;terminer votre paiement.</p>
+		<p>Le participant qui vous pr&eacute;c&egrave;de a re&ccedil;u un gain selon les m&ecirc;mes r&egrave;gles.</p>
+		<p>Veuillez noter que votre gain d&eacute;pend uniquement du r&eacute;sultat que vous enregistrez, tandis que le gain de l'autre participant d&eacute;pend uniquement du r&eacute;sultat qu'il enregistre. Cela signifie que vos gains respectifs sont ind&eacute;pendants l'un de l'autre.</p>
+		<p>A chaque période, vous recevrez :</p>
+		<ul>
+			<li>Le résultat réel du tirage,</li>
+			<li>Le résultat enregistré par l’autre participant (qui peut être identique ou différent du résultat réel).</li>
+		</ul>
+		<p>Seul <b>{{if n_drawn_periods > 1}}{{ns_drawn_periods}} périodes seront{{else}}une période sera{{endif}} s&eacute;lectionn&eacute;{{if n_drawn_periods > 1}}s{{endif}} al&eacute;atoirement</b> pour déterminer votre paiement final.</p>
+		<p>Le résultat de l'expérience sera disponible aujourd'hui immédiatement à la fin de celle-ci. La page finale vous permettra d'enregistrer vos coordonnées bancaires afin de recevoir le paiement correspondant à votre gain.</p>
+	{{endif}}
+</div>
+{{if player.treatment > 0}}
+<div id="{{ initial_presentation }}_2" class="text-justify">
+	{{if player.type == 1}}
+		<p>À chaque période, vous serez apparié avec un autre participant (différent à chaque période), qui recevra à la fois le résultat que vous avez enregistré et le résultat réel du tirage du dé. Ce participant devra également enregistrer le résultat du tirage et recevra un gain en fonction des mêmes règles que vous (avec 0 € pour un tirage de 6).
+		L’autre participant sera également informé du niveau économique de votre département de résidence (faible, moyen ou élevé).</p>
+		{{if player.treatment == 1}}
+			<p>L&rsquo;autre participant a l&rsquo;option d&rsquo;appliquer une p&eacute;nalit&eacute; de -{{C.PENALTY}} &euro; sur le r&eacute;sultat que vous avez enregistr&eacute; pour cette p&eacute;riode. Cette d&eacute;cision est enti&egrave;rement laiss&eacute;e &agrave; la discr&eacute;tion de l&rsquo;autre participant.<br>Votre gain final pour chaque p&eacute;riode d&eacute;pendra alors du r&eacute;sultat que vous avez enregistr&eacute;, ainsi que de la d&eacute;cision prise par l&rsquo;autre participant.</p>
+		{{elif player.treatment == 2}}
+			<p>L&rsquo;autre participant a l&rsquo;option d&rsquo;appliquer une r&eacute;compense de +{{C.REWARD}} &euro; sur le r&eacute;sultat que vous avez enregistr&eacute; pour cette p&eacute;riode. Cette d&eacute;cision est enti&egrave;rement laiss&eacute;e &agrave; la discr&eacute;tion de l&rsquo;autre participant.<br>Votre gain final pour chaque p&eacute;riode d&eacute;pendra alors du r&eacute;sultat que vous avez enregistr&eacute;, ainsi que de la d&eacute;cision prise par l&rsquo;autre participant.</p>
+		{{else}}
+			<p>Veuillez noter que vous serez appari&eacute; avec {{C.NUM_ROUNDS}} participants pour les {{C.NUM_ROUNDS}} p&eacute;riodes :</p>
+			<ul>
+				<li>{{third_periods}} participants auront l&rsquo;option d&rsquo;appliquer une p&eacute;nalit&eacute; de -{{C.PENALTY}} &euro; sur le r&eacute;sultat que vous avez enregistr&eacute;,</li>
+				<li>{{third_periods}} participants auront l&rsquo;option d&rsquo;appliquer une r&eacute;compense de +{{C.REWARD}} &euro; sur le r&eacute;sultat que vous avez enregistr&eacute;,</li>
+				<li>{{third_periods}} participants n&rsquo;auront aucune option.&nbsp;</li>
+			</ul>
+			<p>La rotation des participants est al&eacute;atoire et vous ne serez pas inform&eacute; des options possibles aux autres participants &agrave; chaque p&eacute;riode.<br>Votre gain final pour chaque p&eacute;riode d&eacute;pendra alors du r&eacute;sultat que vous avez enregistr&eacute;, ainsi que de la d&eacute;cision prise par l&rsquo;autre participant</p>
+		{{endif}}
+		{{if player.treatment in [1,2]}}
+			<p>S'il arrive que nous ne trouvions pas un autre participant pour toutes les périodes avant le {{session.config.date_limite}}, uniquement les périodes où l'autre participant a été trouvé seront prises en compte pour le tirage au sort de{{if n_drawn_periods > 1}}s périodes{{else}} la période {{endif}} pour votre paiement final. </p> 
+		{{endif}}
+		<p>Les résultats réels des tirages sont conservés temporairement pour être communiqués à l’autre participant, mais sont ensuite effacés. L’expérimentateur n’aura pas accès à cette donnée et ne saura pas quel était le résultat réel du tirage. Seuls vous et l’autre participant en avez connaissance. </p>
+	{{else}}
+		{{if player.treatment == 1}}
+			<p>Apr&egrave;s avoir pris connaissance du r&eacute;sultat enregistr&eacute;, vous aurez deux t&acirc;ches &agrave; faire :</p>
+			<p><strong>T&acirc;che 1</strong> : Appliquer ou pas une p&eacute;nalit&eacute; de -{{C.PENALTY}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant pour cette p&eacute;riode.<br>
+			<strong>T&acirc;che 2</strong> : Enregistrer un r&eacute;sultat final lequel sera votre propre gain.</p>
+			<p>Veuillez noter que l&rsquo;autre participant sait que vous avez l&rsquo;option d&rsquo;appliquer une p&eacute;nalit&eacute; mais ne sera inform&eacute; de votre d&eacute;cision qu&rsquo;&agrave; la fin de l&rsquo;exp&eacute;rience.&nbsp;
+			<br>Votre propre gain d&eacute;pend uniquement du r&eacute;sultat que vous enregistrerez vous-m&ecirc;me dans la <strong>T&acirc;che 2</strong>.&nbsp;</p>
+			<p>Enfin, avant chaque tirage, vous serez inform&eacute; du revenu mensuel moyen du d&eacute;partement de r&eacute;sidence de l&rsquo;autre participant avec lequel vous &ecirc;tes appari&eacute;.</p>
+			<p>&nbsp;</p>
+		{{elif player.treatment == 2}}
+			<p>Apr&egrave;s avoir pris connaissance du r&eacute;sultat enregistr&eacute;, vous aurez deux t&acirc;ches &agrave; faire :&nbsp;<br><strong>T&acirc;che 1</strong> : Appliquer ou pas une r&eacute;compense de +{{C.REWARD}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant pour cette p&eacute;riode.<br><strong>T&acirc;che 2</strong> : Enregistrer un r&eacute;sultat final lequel sera votre propre gain.<br>Veuillez noter que l&rsquo;autre participant &nbsp;sait que vous avez l&rsquo;option d&rsquo;appliquer une r&eacute;compense mais ne sera inform&eacute; de votre d&eacute;cision qu&rsquo;&agrave; la fin de l&rsquo;exp&eacute;rience.&nbsp;<br>Votre propre gain d&eacute;pend uniquement du r&eacute;sultat que vous enregistrerez vous-m&ecirc;me dans la <strong>T&acirc;che 2</strong>.&nbsp;</p>
+			<p>Enfin, avant chaque tirage, vous serez inform&eacute; du revenu mensuel moyen du d&eacute;partement de r&eacute;sidence de l&rsquo;autre participant avec lequel vous &ecirc;tes appari&eacute;.</p>
+		{{else}}
+			<p>Apr&egrave;s avoir pris connaissance du r&eacute;sultat enregistr&eacute;, vous aurez deux t&acirc;ches &agrave; faire.&nbsp;</p>
+			<p><strong>T&acirc;che 1</strong> : Il y a trois possibilit&eacute;s, soit <strong>1)</strong> Appliquer ou pas une p&eacute;nalit&eacute; de -{{C.PENALTY}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant pour cette p&eacute;riode, <strong>2)</strong> Appliquer ou pas une r&eacute;compense de +{{C.REWARD}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant pour cette p&eacute;riode, <strong>3)</strong> observer sans avoir d&rsquo;option.<br><strong>T&acirc;che 2</strong> : Enregistrer un r&eacute;sultat final lequel sera votre propre gain.<br>Vous avez une chance sur 3 dans l&rsquo;exp&eacute;rience d&rsquo;avoir une t&acirc;che 1 de type 1), 2) ou 3).</p>
+			<p>Votre t&acirc;che 1 pour l&rsquo;exp&eacute;rience est: 
+			<b>
+				{{if player.type == 3}}
+					Avoir l&rsquo;option d&rsquo;appliquer ou pas une p&eacute;nalit&eacute; de -{{C.PENALTY}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant
+				{{elif player.type == 4}}
+					Avoir l&rsquo;option d&rsquo;appliquer ou pas une r&eacute;compense de +{{C.REWARD}} &euro; sur le r&eacute;sultat de l&rsquo;autre participant 
+				{{else}}
+					Observer sans avoir d&rsquo;option.&nbsp;
+				{{endif}}
+			</b> 
+			</p>
+			<p>Veuillez noter que l&rsquo;autre participant sait qu&rsquo;il est appari&eacute; avec des participants qui ont les trois options possibles, sans savoir p&eacute;riode par p&eacute;riode quelle est l&rsquo;option pr&eacute;cise. Il ne sera inform&eacute; de votre d&eacute;cision qu&rsquo;&agrave; la fin de l&rsquo;exp&eacute;rience.&nbsp;<br>Votre propre gain d&eacute;pend uniquement du r&eacute;sultat que vous enregistrerez vous-m&ecirc;me dans la <strong>T&acirc;che 2</strong>.</p>
+			<p>Enfin, avant chaque p&eacute;riode vous serez inform&eacute; du revenu mensuel moyen du d&eacute;partement de r&eacute;sidence de l&rsquo;autre participant.</p>
+		{{endif}}
+	{{endif}}
+</div>
+
+<div id="{{ initial_presentation }}_3" class="text-justify">
+	<p>En résumé, chaque période du jeu se déroule de la manière suivante :</p>
+	<!-- <p>&nbsp;</p> -->
+	{{if player.type == 1}}
+		<ol>
+		<li>Vous faites le tirage du dé et enregistrez le résultat.​</li>
+		<li>L’autre participant reçoit le résultat du tirage du dé et ce que vous avez enregistré.</li>
+		<li>L’autre participant prend ensuite une décision concernant votre résultat.</li>
+		<li>Le r&eacute;sultat r&eacute;el du tirage est effac&eacute; des donn&eacute;es de l'exp&eacute;rience.</li>
+		</ol>
+	{{else}}
+		<ol>
+		<li>L'autre participant effectue le tirage du dé et enregistre le résultat.​</li>
+		<li>Vous recevez l'information sur le revenu mensuel moyen de son département, ainsi que le résultat réel du tirage et le résultat qu'il a enregistré.</li>
+		{{if player.treatment == 1 or player.type == 3}}<li>Vous décidez si vous appliquez une pénalité de -{{C.PENALTY}}&nbsp;€ sur son gain.</li>{{endif}}
+		{{if player.treatment == 2 or player.type == 4}}<li>Vous décidez si vous appliquez une récompense de +{{C.REWARD}}&nbsp;€ à son gain.</li>{{endif}}
+		<li>Vous enregistrez &agrave; votre tour le r&eacute;sultat.</li>
+		<li>Le r&eacute;sultat r&eacute;el du tirage est effac&eacute; des donn&eacute;es de l'exp&eacute;rience.</li>
+		</ol>
+	{{endif}}
+</div>
+{{endif}}
